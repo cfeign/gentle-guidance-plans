@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TherapyModality } from "@/components/TherapyModality";
 import { AgeGroupSelector } from "@/components/AgeGroupSelector";
-import { TreatmentPlanWorkflow } from "@/components/TreatmentPlanWorkflow";
 
 const therapyModalities = [
   {
@@ -53,7 +53,13 @@ const therapyModalities = [
 
 const Index = () => {
   const [selectedAgeGroup, setSelectedAgeGroup] = useState("children");
-  const [selectedModality, setSelectedModality] = useState("");
+  const navigate = useNavigate();
+
+  const handleModalitySelect = (modalityType: string) => {
+    navigate("/treatment-plan", {
+      state: { ageGroup: selectedAgeGroup, modality: modalityType },
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-therapy-secondary/20">
@@ -75,27 +81,16 @@ const Index = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {therapyModalities.map((modality) => (
             <div
               key={modality.type}
-              onClick={() => setSelectedModality(modality.type)}
-              className="cursor-pointer"
+              onClick={() => handleModalitySelect(modality.type)}
             >
-              <TherapyModality
-                {...modality}
-                isSelected={selectedModality === modality.type}
-              />
+              <TherapyModality {...modality} />
             </div>
           ))}
         </div>
-
-        {selectedModality && selectedAgeGroup === "teens" && selectedModality === "emdr" && (
-          <TreatmentPlanWorkflow
-            ageGroup={selectedAgeGroup}
-            modality={selectedModality}
-          />
-        )}
       </div>
     </div>
   );
