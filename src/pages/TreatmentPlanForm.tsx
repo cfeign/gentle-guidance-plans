@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { TreatmentPlanWorkflow } from "@/components/TreatmentPlanWorkflow";
+import { useToast } from "@/components/ui/use-toast";
 
 interface LocationState {
   ageGroup: string;
@@ -45,6 +46,7 @@ const getSampleNotes = (ageGroup: string, modality: string) => {
 const TreatmentPlanForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { ageGroup, modality } = location.state as LocationState;
   const sampleNotes = getSampleNotes(ageGroup, modality);
 
@@ -52,6 +54,12 @@ const TreatmentPlanForm = () => {
     assessment: "",
     structure: "",
     intervention: "",
+  });
+
+  const [isRefining, setIsRefining] = useState({
+    assessment: false,
+    structure: false,
+    intervention: false,
   });
 
   const handleNotesChange = (
@@ -62,6 +70,71 @@ const TreatmentPlanForm = () => {
       ...prev,
       [section]: value,
     }));
+  };
+
+  const refineText = async (section: keyof typeof notes) => {
+    if (!notes[section].trim()) {
+      toast({
+        title: "Empty Text",
+        description: "Please enter some text to refine.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsRefining((prev) => ({ ...prev, [section]: true }));
+
+    try {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content: `You are a professional mental health treatment plan writer. 
+                       Improve the following ${section} notes for ${modality} therapy 
+                       for ${ageGroup}. Make it more professional and detailed while 
+                       maintaining the core information.`,
+            },
+            {
+              role: "user",
+              content: notes[section],
+            },
+          ],
+          temperature: 0.7,
+          max_tokens: 500,
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.choices && data.choices[0]?.message?.content) {
+        setNotes((prev) => ({
+          ...prev,
+          [section]: data.choices[0].message.content.trim(),
+        }));
+        toast({
+          title: "Success",
+          description: "Notes refined successfully!",
+          className: "bg-green-500 text-white",
+        });
+      } else {
+        throw new Error("Invalid API response");
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to refine notes. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRefining((prev) => ({ ...prev, [section]: false }));
+    }
   };
 
   return (
@@ -107,6 +180,17 @@ const TreatmentPlanForm = () => {
                   placeholder={`Enter your ${section} notes here...`}
                   className="min-h-[150px]"
                 />
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => refineText(section as keyof typeof notes)}
+                  disabled={isRefining[section as keyof typeof isRefining]}
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  {isRefining[section as keyof typeof isRefining]
+                    ? "Refining..."
+                    : "Refine with AI"}
+                </Button>
               </div>
             </Card>
           ))}
