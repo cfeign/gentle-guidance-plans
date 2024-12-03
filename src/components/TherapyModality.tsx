@@ -5,6 +5,7 @@ interface TherapyModalityProps {
   name: string;
   description: string;
   type: string;
+  isSelected?: boolean;
 }
 
 const modalityIcons: { [key: string]: any } = {
@@ -19,14 +20,24 @@ const modalityIcons: { [key: string]: any } = {
   "mindfulness": Sun,
 };
 
-export function TherapyModality({ name, description, type }: TherapyModalityProps) {
+export function TherapyModality({ name, description, type, isSelected }: TherapyModalityProps) {
   const Icon = modalityIcons[type] || BookOpen;
 
   return (
-    <Card className="p-6 hover:shadow-lg transition-shadow duration-300 animate-fade-up bg-white border-therapy-secondary hover:border-therapy-primary cursor-pointer">
+    <Card 
+      className={`p-6 hover:shadow-lg transition-all duration-300 animate-fade-up border-2 ${
+        isSelected 
+          ? "border-therapy-primary bg-therapy-secondary/10" 
+          : "border-therapy-secondary hover:border-therapy-primary bg-white"
+      } cursor-pointer`}
+    >
       <div className="flex items-center space-x-4">
-        <div className="p-3 bg-therapy-secondary rounded-full">
-          <Icon className="w-6 h-6 text-therapy-primary" />
+        <div className={`p-3 rounded-full ${
+          isSelected ? "bg-therapy-primary" : "bg-therapy-secondary"
+        }`}>
+          <Icon className={`w-6 h-6 ${
+            isSelected ? "text-white" : "text-therapy-primary"
+          }`} />
         </div>
         <div>
           <h3 className="font-semibold text-lg text-gray-800">{name}</h3>
