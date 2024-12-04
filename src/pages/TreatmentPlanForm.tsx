@@ -3,9 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { TreatmentPlanWorkflow } from "@/components/TreatmentPlanWorkflow";
 import { useToast } from "@/components/ui/use-toast";
+import { NoteControls } from "@/components/NoteControls";
 
 interface LocationState {
   ageGroup: string;
@@ -190,17 +191,12 @@ const TreatmentPlanForm = () => {
                   placeholder={`Enter your ${section} notes here...`}
                   className="min-h-[150px]"
                 />
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => refineText(section as keyof typeof notes)}
-                  disabled={isRefining[section as keyof typeof isRefining]}
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  {isRefining[section as keyof typeof isRefining]
-                    ? "Refining..."
-                    : "Refine with AI"}
-                </Button>
+                <NoteControls
+                  section={section}
+                  notes={notes[section as keyof typeof notes]}
+                  isRefining={isRefining[section as keyof typeof isRefining]}
+                  onRefine={() => refineText(section as keyof typeof notes)}
+                />
               </div>
             </Card>
           ))}
