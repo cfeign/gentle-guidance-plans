@@ -1,17 +1,25 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { ArrowLeft, Lightbulb } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { TreatmentPlanWorkflow } from "@/components/TreatmentPlanWorkflow";
-import { useToast } from "@/components/ui/use-toast";
-import { NoteControls } from "@/components/NoteControls";
-import { SampleSuggestions } from "@/components/SampleSuggestions";
+import { NoteSection } from "@/components/NoteSection";
 
 interface LocationState {
   ageGroup: string;
   modality: string;
+}
+
+interface Version {
+  content: string;
+  timestamp: Date;
+  source: "AI Refinement" | "Insurer Check" | "DSM Alignment" | "Manual Edit";
+}
+
+interface NotesState {
+  content: string;
+  versions: Version[];
+  latestChangeSource?: string;
 }
 
 const getSampleNotes = (ageGroup: string, modality: string) => {
@@ -58,14 +66,13 @@ const getSampleNotes = (ageGroup: string, modality: string) => {
 const TreatmentPlanForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { ageGroup, modality } = location.state as LocationState;
   const sampleNotes = getSampleNotes(ageGroup, modality);
 
-  const [notes, setNotes] = useState({
-    assessment: "",
-    structure: "",
-    intervention: "",
+  const [notes, setNotes] = useState<Record<string, NotesState>>({
+    assessment: { content: "", versions: [] },
+    structure: { content: "", versions: [] },
+    intervention: { content: "", versions: [] },
   });
 
   const [isRefining, setIsRefining] = useState({
@@ -74,79 +81,59 @@ const TreatmentPlanForm = () => {
     intervention: false,
   });
 
-  const handleNotesChange = (
-    section: keyof typeof notes,
-    value: string
-  ) => {
+  const handleNotesChange = (section: keyof typeof notes, value: string) => {
     setNotes((prev) => ({
       ...prev,
-      [section]: value,
+      [section]: {
+        ...prev[section],
+        content: value,
+        versions: [
+          {
+            content: value,
+            timestamp: new Date(),
+            source: "Manual Edit",
+          },
+          ...prev[section].versions,
+        ],
+        latestChangeSource: "Manual Edit",
+      },
+    }));
+  };
+
+  const handleRevert = (section: keyof typeof notes, content: string) => {
+    setNotes((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        content,
+      },
     }));
   };
 
   const refineText = async (section: keyof typeof notes) => {
-    if (!notes[section].trim()) {
-      toast({
-        title: "Empty Text",
-        description: "Please enter some text to refine.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsRefining((prev) => ({ ...prev, [section]: true }));
 
-    try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: `You are a professional mental health treatment plan writer. 
-                       Improve the following ${section} notes for ${modality} therapy 
-                       for ${ageGroup}. Make it more professional and detailed while 
-                       maintaining the core information.`,
-            },
-            {
-              role: "user",
-              content: notes[section],
-            },
-          ],
-          temperature: 0.7,
-          max_tokens: 500,
-        }),
-      });
+    // Mock API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      const data = await response.json();
-      
-      if (data.choices && data.choices[0]?.message?.content) {
-        setNotes((prev) => ({
-          ...prev,
-          [section]: data.choices[0].message.content.trim(),
-        }));
-        toast({
-          title: "Success",
-          description: "Notes refined successfully!",
-          className: "bg-green-500 text-white",
-        });
-      } else {
-        throw new Error("Invalid API response");
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to refine notes. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsRefining((prev) => ({ ...prev, [section]: false }));
-    }
+    setNotes((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        content: `Refined ${prev[section].content}`,
+        versions: [
+          {
+            content: `Refined ${prev[section].content}`,
+            timestamp: new Date(),
+            source: "AI Refinement",
+          },
+          ...prev[section].versions,
+        ],
+        latestChangeSource: "AI Refinement",
+      },
+    }));
+
+    setIsRefining((prev) => ({ ...prev, [section]: false }));
   };
 
   return (
@@ -173,34 +160,22 @@ const TreatmentPlanForm = () => {
         <TreatmentPlanWorkflow ageGroup={ageGroup} modality={modality} />
 
         <div className="space-y-6">
-          {["assessment", "structure", "intervention"].map((section) => (
-            <Card key={section} className="p-6">
-              <h3 className="text-xl font-semibold mb-4 text-gray-800">
-                {section.charAt(0).toUpperCase() + section.slice(1)} Notes
-              </h3>
-              <div className="space-y-4">
-                <div className="bg-therapy-soft p-4 rounded-md">
-                  <p className="text-sm text-gray-600 italic mb-2">
-                    Sample: {sampleNotes?.[section as keyof typeof sampleNotes]}
-                  </p>
-                  <SampleSuggestions section={section} ageGroup={ageGroup} modality={modality} />
-                </div>
-                <Textarea
-                  value={notes[section as keyof typeof notes]}
-                  onChange={(e) =>
-                    handleNotesChange(section as keyof typeof notes, e.target.value)
-                  }
-                  placeholder={`Enter your ${section} notes here...`}
-                  className="min-h-[150px]"
-                />
-                <NoteControls
-                  section={section}
-                  notes={notes[section as keyof typeof notes]}
-                  isRefining={isRefining[section as keyof typeof isRefining]}
-                  onRefine={() => refineText(section as keyof typeof notes)}
-                />
-              </div>
-            </Card>
+          {(["assessment", "structure", "intervention"] as const).map((section) => (
+            <NoteSection
+              key={section}
+              title={`${section.charAt(0).toUpperCase() + section.slice(1)} Notes`}
+              section={section}
+              value={notes[section].content}
+              onChange={(value) => handleNotesChange(section, value)}
+              sampleNote={sampleNotes[section]}
+              ageGroup={ageGroup}
+              modality={modality}
+              isRefining={isRefining[section]}
+              onRefine={() => refineText(section)}
+              versions={notes[section].versions}
+              onRevert={(content) => handleRevert(section, content)}
+              latestChangeSource={notes[section].latestChangeSource}
+            />
           ))}
         </div>
       </div>
