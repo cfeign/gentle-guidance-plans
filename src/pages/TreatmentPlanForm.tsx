@@ -3,10 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lightbulb } from "lucide-react";
 import { TreatmentPlanWorkflow } from "@/components/TreatmentPlanWorkflow";
 import { useToast } from "@/components/ui/use-toast";
 import { NoteControls } from "@/components/NoteControls";
+import { SampleSuggestions } from "@/components/SampleSuggestions";
 
 interface LocationState {
   ageGroup: string;
@@ -179,9 +180,10 @@ const TreatmentPlanForm = () => {
               </h3>
               <div className="space-y-4">
                 <div className="bg-therapy-soft p-4 rounded-md">
-                  <p className="text-sm text-gray-600 italic">
+                  <p className="text-sm text-gray-600 italic mb-2">
                     Sample: {sampleNotes?.[section as keyof typeof sampleNotes]}
                   </p>
+                  <SampleSuggestions section={section} ageGroup={ageGroup} modality={modality} />
                 </div>
                 <Textarea
                   value={notes[section as keyof typeof notes]}
