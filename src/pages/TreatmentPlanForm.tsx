@@ -24,6 +24,11 @@ const getSampleNotes = (ageGroup: string, modality: string) => {
         assessment: "Adolescent experiencing academic anxiety and social withdrawal following cyberbullying incident. Reports intrusive thoughts and difficulty concentrating in class.",
         structure: "50-minute sessions twice weekly initially, reducing to weekly after stabilization. Including parents in monthly check-ins.",
         intervention: "Using headphones with bilateral audio for processing. Incorporating mindfulness techniques between sets. Focus on building positive self-beliefs through successful academic experiences.",
+      },
+      adults: {
+        assessment: "Adult client presenting with PTSD symptoms following workplace accident. Reports flashbacks, hypervigilance, and difficulty maintaining employment.",
+        structure: "Weekly 60-minute sessions. Initial phase focusing on stabilization and resource development. Treatment expected to span 16-20 sessions.",
+        intervention: "Standard EMDR protocol with cognitive interweaves as needed. Incorporating workplace-specific coping strategies. Using combination of visual and tactile bilateral stimulation.",
       }
     },
     "animal-assisted": {
@@ -36,6 +41,11 @@ const getSampleNotes = (ageGroup: string, modality: string) => {
         assessment: "Teenager struggling with depression and social isolation. Shows positive response to animals and expresses interest in veterinary career.",
         structure: "Weekly 60-minute sessions combining traditional talk therapy with animal interaction. Including journaling about animal interactions between sessions.",
         intervention: "Working with therapy horse for emotional regulation. Teaching animal training techniques to build confidence. Using animal care responsibilities as behavioral activation.",
+      },
+      adults: {
+        assessment: "Adult client with generalized anxiety disorder and difficulty with emotional expression. History of positive experiences with pets.",
+        structure: "Bi-weekly 50-minute sessions incorporating both small and large therapy animals. Focus on mindfulness and grounding techniques with animal support.",
+        intervention: "Progressive exposure to different therapy animals. Teaching animal-assisted relaxation techniques. Building emotional awareness through animal interaction.",
       }
     }
   };
