@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { TreatmentPlanWorkflow } from "@/components/TreatmentPlanWorkflow";
-import { NoteSection } from "@/components/NoteSection";
 import { useRole } from "../App";
+import { TherapyInsightCard } from "@/components/treatment-plan/TherapyInsightCard";
+import { PlanSection } from "@/components/treatment-plan/PlanSection";
 
 interface LocationState {
   ageGroup: string;
@@ -158,10 +158,7 @@ const TreatmentPlanForm = () => {
 
   const refineText = async (section: keyof typeof notes) => {
     setIsRefining((prev) => ({ ...prev, [section]: true }));
-
-    // Mock API call delay
     await new Promise((resolve) => setTimeout(resolve, 1500));
-
     setNotes((prev) => ({
       ...prev,
       [section]: {
@@ -178,67 +175,55 @@ const TreatmentPlanForm = () => {
         latestChangeSource: "AI Refinement",
       },
     }));
-
     setIsRefining((prev) => ({ ...prev, [section]: false }));
   };
 
-  const getClientFriendlyTitle = (modality: string) => {
-    if (modality === "emdr") {
-      return "Your Memory Healing Plan";
-    } else if (modality === "animal-assisted") {
-      return "Your Animal-Assisted Healing Journey";
-    }
-    return "Your Healing Plan";
-  };
-
-  const getClientFriendlyBackText = () => {
-    return "Back to Ways We Can Help";
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-therapy-secondary/20 p-6">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {isClientView ? getClientFriendlyBackText() : "Back to Modalities"}
-        </Button>
+    <div className="space-y-6">
+      <Button
+        variant="ghost"
+        onClick={() => navigate("/")}
+        className="flex items-center gap-2"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        {isClientView ? "Back to Ways We Can Help" : "Back to Modalities"}
+      </Button>
 
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            {isClientView
-              ? getClientFriendlyTitle(modality)
-              : `${modality === "emdr" ? "EMDR" : "Animal-Assisted"} Therapy Plan`}
-          </h1>
-          <p className="text-gray-600">
-            Age Group: {ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}
-          </p>
-        </div>
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          {isClientView
+            ? modality === "emdr"
+              ? "Your Memory Healing Plan"
+              : "Your Animal-Assisted Healing Journey"
+            : `${modality === "emdr" ? "EMDR" : "Animal-Assisted"} Therapy Plan`}
+        </h1>
+        <p className="text-gray-600">
+          Age Group: {ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}
+        </p>
+      </div>
 
-        <TreatmentPlanWorkflow ageGroup={ageGroup} modality={modality} />
+      {!isClientView && (
+        <TherapyInsightCard modality={modality} ageGroup={ageGroup} />
+      )}
 
-        <div className="space-y-6">
-          {(["assessment", "structure", "intervention"] as const).map((section) => (
-            <NoteSection
-              key={section}
-              title={`${section.charAt(0).toUpperCase() + section.slice(1)} Notes`}
-              section={section}
-              value={notes[section].content}
-              onChange={(value) => handleNotesChange(section, value)}
-              sampleNote={sampleNotes[section]}
-              ageGroup={ageGroup}
-              modality={modality}
-              isRefining={isRefining[section]}
-              onRefine={() => refineText(section)}
-              versions={notes[section].versions}
-              onRevert={(content) => handleRevert(section, content)}
-              latestChangeSource={notes[section].latestChangeSource}
-            />
-          ))}
-        </div>
+      <div className="space-y-6">
+        {(["assessment", "structure", "intervention"] as const).map((section) => (
+          <PlanSection
+            key={section}
+            title={`${section.charAt(0).toUpperCase() + section.slice(1)} Notes`}
+            section={section}
+            value={notes[section].content}
+            onChange={(value) => handleNotesChange(section, value)}
+            sampleNote={sampleNotes[section]}
+            ageGroup={ageGroup}
+            modality={modality}
+            isRefining={isRefining[section]}
+            onRefine={() => refineText(section)}
+            versions={notes[section].versions}
+            onRevert={(content) => handleRevert(section, content)}
+            latestChangeSource={notes[section].latestChangeSource}
+          />
+        ))}
       </div>
     </div>
   );
