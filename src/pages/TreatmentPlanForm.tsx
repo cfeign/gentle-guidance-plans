@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { TreatmentPlanWorkflow } from "@/components/TreatmentPlanWorkflow";
 import { NoteSection } from "@/components/NoteSection";
+import { useRole } from "../App";
 
 interface LocationState {
   ageGroup: string;
@@ -66,6 +67,8 @@ const getSampleNotes = (ageGroup: string, modality: string) => {
 const TreatmentPlanForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { role } = useRole();
+  const isClientView = role === "client";
   const { ageGroup, modality } = location.state as LocationState;
   const sampleNotes = getSampleNotes(ageGroup, modality);
 
@@ -145,12 +148,16 @@ const TreatmentPlanForm = () => {
           className="flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Modalities
+          {isClientView ? "Back to Ways We Can Help" : "Back to Modalities"}
         </Button>
 
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            {modality === "emdr" ? "EMDR" : "Animal-Assisted"} Therapy Plan
+            {isClientView
+              ? modality === "emdr"
+                ? "Your Memory Healing Plan"
+                : "Your Animal-Assisted Healing Plan"
+              : `${modality === "emdr" ? "EMDR" : "Animal-Assisted"} Therapy Plan`}
           </h1>
           <p className="text-gray-600">
             Age Group: {ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}
