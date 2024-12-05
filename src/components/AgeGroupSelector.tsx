@@ -8,8 +8,8 @@ interface AgeGroupSelectorProps {
 
 export function AgeGroupSelector({ selected, onChange }: AgeGroupSelectorProps) {
   const ageGroups = [
-    { id: "children", label: "Children (3-12)" },
-    { id: "teens", label: "Teens (13-17)" },
+    { id: "children", label: "Kids & Young Children (3-12)" },
+    { id: "teens", label: "Teens & Youth (13-17)" },
     { id: "adults", label: "Adults (18+)" },
   ];
 
