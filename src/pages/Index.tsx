@@ -2,11 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { useRole } from "../App";
 import { Card } from "@/components/ui/card";
 import { ClipboardList, FileSpreadsheet } from "lucide-react";
+import { AgeGroupSelector } from "@/components/AgeGroupSelector";
+import { useState } from "react";
 
 const Index = () => {
   const navigate = useNavigate();
   const { role } = useRole();
   const isClientView = role === "client";
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState("adults");
 
   const features = [
     {
@@ -17,7 +20,7 @@ const Index = () => {
         : "Create and manage customized treatment plans",
       onClick: () => navigate("/treatment-plan", { 
         state: { 
-          ageGroup: "adults",
+          ageGroup: selectedAgeGroup,
           modality: "emdr"
         }
       }),
@@ -37,6 +40,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-therapy-secondary/20">
       <div className="container py-8">
+        <div className="mb-8">
+          <AgeGroupSelector selected={selectedAgeGroup} onChange={setSelectedAgeGroup} />
+        </div>
+
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
             {isClientView
