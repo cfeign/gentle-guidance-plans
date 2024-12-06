@@ -15,7 +15,12 @@ const Index = () => {
       description: isClientView
         ? "Personalized plans to support your growth and healing"
         : "Create and manage customized treatment plans",
-      onClick: () => navigate("/treatment-plan"),
+      onClick: () => navigate("/treatment-plan", { 
+        state: { 
+          ageGroup: "adults",
+          modality: "emdr"
+        }
+      }),
       isAvailable: true,
     },
     {
@@ -69,13 +74,7 @@ const Index = () => {
                     Coming Soon
                   </div>
                 )}
-                <div 
-                  className="mt-auto flex justify-end"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    feature.onClick();
-                  }}
-                >
+                <div className="mt-auto flex justify-end">
                   <span className="text-therapy-primary group-hover:underline">
                     {feature.isAvailable ? "Get Started →" : "Learn More →"}
                   </span>
