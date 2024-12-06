@@ -69,7 +69,13 @@ const Index = () => {
                     Coming Soon
                   </div>
                 )}
-                <div className="mt-auto flex justify-end">
+                <div 
+                  className="mt-auto flex justify-end"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    feature.onClick();
+                  }}
+                >
                   <span className="text-therapy-primary group-hover:underline">
                     {feature.isAvailable ? "Get Started →" : "Learn More →"}
                   </span>
