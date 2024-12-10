@@ -9,7 +9,87 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      intake_forms: {
+        Row: {
+          age_group: string
+          client_id: string | null
+          created_at: string | null
+          current_functioning: string | null
+          family_background: string | null
+          id: string
+          medical_history: string | null
+          presenting_problems: string | null
+          status: string | null
+          therapist_id: string | null
+          therapist_notes: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          age_group: string
+          client_id?: string | null
+          created_at?: string | null
+          current_functioning?: string | null
+          family_background?: string | null
+          id?: string
+          medical_history?: string | null
+          presenting_problems?: string | null
+          status?: string | null
+          therapist_id?: string | null
+          therapist_notes?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          age_group?: string
+          client_id?: string | null
+          created_at?: string | null
+          current_functioning?: string | null
+          family_background?: string | null
+          id?: string
+          medical_history?: string | null
+          presenting_problems?: string | null
+          status?: string | null
+          therapist_id?: string | null
+          therapist_notes?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intake_forms_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intake_forms_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

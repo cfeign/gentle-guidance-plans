@@ -32,8 +32,8 @@ const Index = () => {
       description: isClientView
         ? "Share your story and help us understand your needs better"
         : "Biopsychosocial intake forms and standardized assessments",
-      onClick: () => console.log("Coming soon"),
-      isAvailable: false,
+      onClick: () => navigate("/intake", { state: { ageGroup: selectedAgeGroup } }),
+      isAvailable: true,
     },
   ];
 
