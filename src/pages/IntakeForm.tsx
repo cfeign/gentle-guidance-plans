@@ -1,6 +1,9 @@
+import { useRole } from "../App";
+import { BiopsychosocialForm } from "@/components/BiopsychosocialForm";
+import { AgeGroupSelector } from "@/components/AgeGroupSelector";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useRole } from "../App";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,6 +25,7 @@ const IntakeForm = () => {
   const location = useLocation();
   const { ageGroup } = location.state || { ageGroup: 'adults' };
   const isClientView = role === "client";
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState("adults");
 
   const form = useForm<IntakeFormData>({
     defaultValues: {
@@ -75,11 +79,12 @@ const IntakeForm = () => {
 
   if (!isClientView) {
     return (
-      <div className="text-center py-8">
-        <h2 className="text-2xl font-semibold mb-4">Therapist View</h2>
-        <p className="text-gray-600">
-          As a therapist, you can view and manage intake forms from your clients.
-        </p>
+      <div className="max-w-5xl mx-auto py-8 px-4">
+        <h2 className="text-2xl font-semibold mb-6">Biopsychosocial Assessment</h2>
+        <AgeGroupSelector selected={selectedAgeGroup} onChange={setSelectedAgeGroup} />
+        <div className="mt-6">
+          <BiopsychosocialForm />
+        </div>
       </div>
     );
   }
