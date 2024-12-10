@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { FormFieldWithTips } from "./FormFieldWithTips";
 
 interface BiopsychosocialFormData {
   // Identifying Information
@@ -90,39 +90,18 @@ export function BiopsychosocialForm() {
         <div className="space-y-6 bg-therapy-secondary/20 p-6 rounded-lg">
           <h3 className="text-xl font-semibold">Presenting Problems & History</h3>
           
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="presenting_problems"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Chief Complaint & Presenting Problems</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe the primary reasons for seeking treatment..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Chief Complaint & Presenting Problems"
+            placeholder="Describe the primary reasons for seeking treatment..."
           />
 
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="onset_duration"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Onset & Duration</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="When did the symptoms begin? How have they progressed?"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Onset & Duration"
+            placeholder="When did the symptoms begin? How have they progressed?"
           />
 
           <FormField
@@ -160,93 +139,43 @@ export function BiopsychosocialForm() {
         <div className="space-y-6 bg-therapy-accent/20 p-6 rounded-lg">
           <h3 className="text-xl font-semibold">Biological Factors</h3>
           
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="medical_conditions"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Current Medical Conditions</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="List any current medical conditions..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Current Medical Conditions"
+            placeholder="List any current medical conditions..."
           />
 
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="medications"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Current Medications</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="List current medications and dosages..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Current Medications"
+            placeholder="List current medications and dosages..."
           />
 
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="sleep_patterns"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sleep Patterns</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe sleep patterns and any disturbances..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Sleep Patterns"
+            placeholder="Describe sleep patterns and any disturbances..."
           />
         </div>
 
         <div className="space-y-6 bg-therapy-soft/40 p-6 rounded-lg">
           <h3 className="text-xl font-semibold">Psychological Factors</h3>
           
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="mental_health_history"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Mental Health History</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Previous mental health diagnoses and treatments..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Mental Health History"
+            placeholder="Previous mental health diagnoses and treatments..."
           />
 
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="trauma_history"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Trauma History</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Relevant trauma history and impact..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Trauma History"
+            placeholder="Relevant trauma history and impact..."
           />
 
           <FormField
@@ -273,113 +202,50 @@ export function BiopsychosocialForm() {
         <div className="space-y-6 bg-therapy-primary/10 p-6 rounded-lg">
           <h3 className="text-xl font-semibold">Social & Environmental Factors</h3>
           
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="family_dynamics"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Family Dynamics</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Current family situation and relationships..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Family Dynamics"
+            placeholder="Current family situation and relationships..."
           />
 
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="support_systems"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Support Systems</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Available social support and resources..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Support Systems"
+            placeholder="Available social support and resources..."
           />
 
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="cultural_factors"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cultural Considerations</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Relevant cultural factors and beliefs..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Cultural Considerations"
+            placeholder="Relevant cultural factors and beliefs..."
           />
         </div>
 
         <div className="space-y-6 bg-therapy-secondary/20 p-6 rounded-lg">
           <h3 className="text-xl font-semibold">Clinical Assessment & Plan</h3>
           
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="diagnostic_impressions"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Diagnostic Impressions</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Clinical impressions and potential diagnoses..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Diagnostic Impressions"
+            placeholder="Clinical impressions and potential diagnoses..."
           />
 
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="treatment_recommendations"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Treatment Recommendations</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Recommended treatment approach and interventions..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Treatment Recommendations"
+            placeholder="Recommended treatment approach and interventions..."
           />
 
-          <FormField
-            control={form.control}
+          <FormFieldWithTips
+            form={form}
             name="goals"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Treatment Goals</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Specific, measurable treatment goals..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Treatment Goals"
+            placeholder="Specific, measurable treatment goals..."
           />
         </div>
 
