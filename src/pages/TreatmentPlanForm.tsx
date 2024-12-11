@@ -6,7 +6,7 @@ import { TherapyModality } from "@/components/TherapyModality";
 const TreatmentPlanForm = () => {
   const location = useLocation();
   const { ageGroup } = location.state as { ageGroup: string };
-  const [selectedModality, setSelectedModality] = useState("emdr");
+  const [selectedModality, setSelectedModality] = useState("");
   const [showWorkflow, setShowWorkflow] = useState(false);
 
   const modalities = [

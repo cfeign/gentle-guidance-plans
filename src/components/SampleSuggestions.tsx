@@ -17,107 +17,227 @@ const getSuggestions = (section: string, ageGroup: string, modality: string) => 
   const suggestions = {
     emdr: {
       children: {
-        assessment: [
-          "Consider incorporating play therapy elements to assess trauma impact",
-          "Use age-appropriate metaphors for explaining feelings and symptoms",
-          "Include parent/caregiver observations of behavioral changes",
+        presenting_problems: [
+          "Behavioral changes after traumatic event",
+          "Sleep disturbances or nightmares",
+          "Difficulty concentrating in school",
         ],
-        structure: [
-          "Start with shorter sessions (30-45 minutes) and gradually increase",
-          "Include regular parent check-ins at the beginning of sessions",
-          "Use creative activities for bilateral stimulation",
+        medical_conditions: [
+          "Current medications and dosages",
+          "Previous therapy experiences",
+          "Physical symptoms related to trauma",
         ],
-        intervention: [
-          "Incorporate favorite toys/characters in safe place development",
-          "Use storytelling to process difficult memories",
-          "Implement child-friendly bilateral stimulation methods",
+        mental_health_history: [
+          "Previous trauma treatment attempts",
+          "Family mental health background",
+          "School counseling history",
+        ],
+        trauma_history: [
+          "Age-appropriate trauma assessment",
+          "Impact on daily functioning",
+          "Parent/caregiver observations",
+        ],
+        family_dynamics: [
+          "Family support system",
+          "Parent/caregiver involvement",
+          "Home environment stability",
+        ],
+        diagnostic_impressions: [
+          "Age-appropriate PTSD symptoms",
+          "Developmental considerations",
+          "Attachment patterns",
+        ],
+        treatment_recommendations: [
+          "Child-adapted EMDR protocol",
+          "Play therapy integration",
+          "Parent/caregiver involvement plan",
         ],
       },
       teens: {
-        assessment: [
-          "Include academic and social media impact assessment",
-          "Evaluate peer relationships and support systems",
-          "Assess for co-occurring anxiety or depression",
+        presenting_problems: [
+          "Academic performance changes",
+          "Social relationship difficulties",
+          "Emotional regulation challenges",
         ],
-        structure: [
-          "Balance individual processing with family involvement",
-          "Include homework assignments for skill practice",
-          "Consider group therapy components",
+        medical_conditions: [
+          "Current medications",
+          "Physical health status",
+          "Sleep patterns",
         ],
-        intervention: [
-          "Use music or art for bilateral stimulation",
-          "Incorporate mindfulness techniques",
-          "Address negative self-beliefs related to trauma",
+        mental_health_history: [
+          "Previous counseling experiences",
+          "School-based interventions",
+          "Family therapy history",
+        ],
+        trauma_history: [
+          "Detailed trauma timeline",
+          "Impact on development",
+          "Coping mechanisms used",
+        ],
+        family_dynamics: [
+          "Parent-teen relationship",
+          "Sibling dynamics",
+          "Support system assessment",
+        ],
+        diagnostic_impressions: [
+          "PTSD criteria evaluation",
+          "Comorbid conditions",
+          "Risk assessment",
+        ],
+        treatment_recommendations: [
+          "Standard EMDR protocol adaptation",
+          "School coordination plan",
+          "Family involvement strategy",
         ],
       },
       adults: {
-        assessment: [
-          "Evaluate impact on work and relationships",
-          "Include detailed trauma history timeline",
-          "Assess for dissociative symptoms",
+        presenting_problems: [
+          "Current trauma symptoms",
+          "Work/relationship impact",
+          "Daily functioning assessment",
         ],
-        structure: [
-          "Standard 60-90 minute sessions",
-          "Regular progress evaluation",
-          "Incorporate relapse prevention planning",
+        medical_conditions: [
+          "Physical health status",
+          "Current medications",
+          "Sleep and appetite patterns",
         ],
-        intervention: [
-          "Use cognitive interweaves for stuck points",
-          "Implement workplace-specific coping strategies",
-          "Address attachment-related issues",
+        mental_health_history: [
+          "Previous therapy experiences",
+          "Treatment outcomes",
+          "Coping strategies used",
+        ],
+        trauma_history: [
+          "Comprehensive trauma assessment",
+          "Impact on life domains",
+          "Previous treatment attempts",
+        ],
+        family_dynamics: [
+          "Current support system",
+          "Relationship patterns",
+          "Family mental health history",
+        ],
+        diagnostic_impressions: [
+          "PTSD diagnostic criteria",
+          "Comorbid conditions",
+          "Functional impairment",
+        ],
+        treatment_recommendations: [
+          "Standard EMDR protocol",
+          "Treatment frequency",
+          "Progress monitoring plan",
         ],
       },
     },
     "animal-assisted": {
       children: {
-        assessment: [
-          "Observe child-animal interactions for attachment patterns",
-          "Assess comfort level with different animals",
-          "Include family's experience with pets",
+        presenting_problems: [
+          "Anxiety or fear responses",
+          "Social interaction difficulties",
+          "Emotional regulation challenges",
         ],
-        structure: [
-          "Short sessions with varied animal interactions",
-          "Include animal care education",
-          "Incorporate family in animal activities",
+        medical_conditions: [
+          "Allergies assessment",
+          "Physical health status",
+          "Previous animal interactions",
         ],
-        intervention: [
-          "Use animals for emotional regulation practice",
-          "Teach gentle touch and boundaries",
-          "Incorporate animal-themed art therapy",
+        mental_health_history: [
+          "Previous therapy experiences",
+          "Response to animals",
+          "School-based interventions",
+        ],
+        trauma_history: [
+          "Animal-related experiences",
+          "Comfort with animals",
+          "Safety considerations",
+        ],
+        family_dynamics: [
+          "Family pet history",
+          "Home environment",
+          "Support system",
+        ],
+        diagnostic_impressions: [
+          "Behavioral observations",
+          "Animal interaction assessment",
+          "Treatment suitability",
+        ],
+        treatment_recommendations: [
+          "Animal selection plan",
+          "Integration strategy",
+          "Safety protocols",
         ],
       },
       teens: {
-        assessment: [
-          "Evaluate interest in animal-related activities",
-          "Assess for allergies or phobias",
-          "Include goals related to animal interaction",
+        presenting_problems: [
+          "Social anxiety symptoms",
+          "Emotional regulation",
+          "Self-esteem concerns",
         ],
-        structure: [
-          "Combine individual and group sessions",
-          "Include animal care responsibilities",
-          "Regular progress documentation",
+        medical_conditions: [
+          "Health considerations",
+          "Allergies assessment",
+          "Physical limitations",
         ],
-        intervention: [
-          "Use animal training for confidence building",
-          "Incorporate journaling about animal interactions",
-          "Practice social skills through animal care",
+        mental_health_history: [
+          "Previous interventions",
+          "Animal interaction history",
+          "Treatment preferences",
+        ],
+        trauma_history: [
+          "Trauma impact assessment",
+          "Animal-related experiences",
+          "Safety considerations",
+        ],
+        family_dynamics: [
+          "Family support system",
+          "Pet relationships",
+          "Home environment",
+        ],
+        diagnostic_impressions: [
+          "Clinical assessment",
+          "Animal therapy suitability",
+          "Treatment goals",
+        ],
+        treatment_recommendations: [
+          "Animal therapy protocol",
+          "Integration plan",
+          "Progress monitoring",
         ],
       },
       adults: {
-        assessment: [
-          "Review previous experience with animals",
-          "Assess comfort with different species",
-          "Evaluate stress response to animals",
+        presenting_problems: [
+          "Current symptoms",
+          "Functional impact",
+          "Treatment goals",
         ],
-        structure: [
-          "Progressive exposure to different animals",
-          "Include mindfulness with animals",
-          "Regular evaluation of comfort levels",
+        medical_conditions: [
+          "Health status",
+          "Allergies/concerns",
+          "Physical limitations",
         ],
-        intervention: [
-          "Use animals for grounding exercises",
-          "Practice emotional regulation through animal interaction",
-          "Incorporate animal-assisted mindfulness",
+        mental_health_history: [
+          "Previous treatment",
+          "Animal interactions",
+          "Therapeutic preferences",
+        ],
+        trauma_history: [
+          "Trauma assessment",
+          "Animal experiences",
+          "Safety planning",
+        ],
+        family_dynamics: [
+          "Support system",
+          "Living situation",
+          "Pet relationships",
+        ],
+        diagnostic_impressions: [
+          "Clinical evaluation",
+          "Treatment suitability",
+          "Goal assessment",
+        ],
+        treatment_recommendations: [
+          "Treatment protocol",
+          "Animal integration",
+          "Progress measures",
         ],
       },
     },
@@ -129,6 +249,8 @@ const getSuggestions = (section: string, ageGroup: string, modality: string) => 
 export function SampleSuggestions({ section, ageGroup, modality }: SampleSuggestionsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const suggestions = getSuggestions(section, ageGroup, modality);
+
+  if (!suggestions.length) return null;
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
