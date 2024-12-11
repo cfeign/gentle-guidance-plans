@@ -24,7 +24,7 @@ interface Assessment {
 }
 
 export function AssessmentsList() {
-  const { data: assessments, isLoading } = useQuery<Assessment[]>({
+  const { data: assessments, isLoading } = useQuery({
     queryKey: ["assessments"],
     queryFn: async () => {
       const { data: profile } = await supabase
@@ -41,24 +41,24 @@ export function AssessmentsList() {
           session_date,
           session_type,
           symptom_status,
-          client:profiles!assessments_client_id_fkey (
-            id,
-            client_name
-          )
+          client:profiles(id, client_name)
         `)
         .eq("therapist_id", profile.id)
         .order("session_date", { ascending: false });
 
       if (error) throw error;
       
-      // Ensure the response matches our Assessment interface
-      const typedData = (data || []).map(item => ({
+      // Transform the data to match our Assessment interface
+      const typedData: Assessment[] = (data || []).map(item => ({
         id: item.id,
         session_date: item.session_date,
         session_type: item.session_type,
         symptom_status: item.symptom_status,
-        client: item.client
-      })) as Assessment[];
+        client: item.client ? {
+          id: item.client.id,
+          client_name: item.client.client_name
+        } : null
+      }));
 
       return typedData;
     },
