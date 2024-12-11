@@ -189,6 +189,36 @@ export type Database = {
         }
         Relationships: []
       }
+      treatment_suggestions: {
+        Row: {
+          age_group: string
+          created_at: string | null
+          id: string
+          modality: string
+          section: string
+          suggestions: string[]
+          updated_at: string | null
+        }
+        Insert: {
+          age_group: string
+          created_at?: string | null
+          id?: string
+          modality: string
+          section: string
+          suggestions: string[]
+          updated_at?: string | null
+        }
+        Update: {
+          age_group?: string
+          created_at?: string | null
+          id?: string
+          modality?: string
+          section?: string
+          suggestions?: string[]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
