@@ -41,7 +41,10 @@ export function AssessmentsList() {
           session_date,
           session_type,
           symptom_status,
-          client:profiles(id, client_name)
+          client:client_id (
+            id,
+            client_name
+          )
         `)
         .eq("therapist_id", profile.id)
         .order("session_date", { ascending: false });
