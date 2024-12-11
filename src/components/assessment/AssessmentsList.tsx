@@ -51,13 +51,19 @@ export function AssessmentsList() {
 
       if (error) throw error;
       
-      return (data || []).map(item => ({
+      // Transform the data to match our Assessment interface
+      const transformedData: Assessment[] = (data || []).map(item => ({
         id: item.id,
         session_date: item.session_date,
         session_type: item.session_type,
         symptom_status: item.symptom_status,
-        client: item.client || null
-      })) as Assessment[];
+        client: item.client && !Array.isArray(item.client) ? {
+          id: item.client.id,
+          client_name: item.client.client_name
+        } : null
+      }));
+
+      return transformedData;
     },
   });
 
