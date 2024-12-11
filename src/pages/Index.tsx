@@ -3,6 +3,7 @@ import { useRole } from "../App";
 import { Card } from "@/components/ui/card";
 import { ClipboardList, FileSpreadsheet } from "lucide-react";
 import { AgeGroupSelector } from "@/components/AgeGroupSelector";
+import { TherapyModality } from "@/components/TherapyModality";
 import { useState } from "react";
 
 const Index = () => {
@@ -10,6 +11,30 @@ const Index = () => {
   const { role } = useRole();
   const isClientView = role === "client";
   const [selectedAgeGroup, setSelectedAgeGroup] = useState("adults");
+  const [selectedModality, setSelectedModality] = useState("emdr");
+
+  const modalities = [
+    {
+      name: "EMDR Therapy",
+      description: "Eye Movement Desensitization and Reprocessing for trauma and anxiety",
+      type: "emdr",
+    },
+    {
+      name: "Animal-Assisted Therapy",
+      description: "Therapeutic interventions assisted by trained animals",
+      type: "animal-assisted",
+    },
+    {
+      name: "Family Therapy",
+      description: "Systemic approach involving family members",
+      type: "family-therapy",
+    },
+    {
+      name: "Art Therapy",
+      description: "Expression and healing through creative processes",
+      type: "art-therapy",
+    },
+  ];
 
   const features = [
     {
@@ -21,7 +46,7 @@ const Index = () => {
       onClick: () => navigate("/treatment-plan", { 
         state: { 
           ageGroup: selectedAgeGroup,
-          modality: "emdr"
+          modality: selectedModality
         }
       }),
       isAvailable: true,
@@ -55,6 +80,25 @@ const Index = () => {
               ? "Choose where you'd like to start. We're here to support you every step of the way."
               : "Select a tool to begin working with your clients."}
           </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Select Treatment Modality</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {modalities.map((modality) => (
+              <div
+                key={modality.type}
+                onClick={() => setSelectedModality(modality.type)}
+              >
+                <TherapyModality
+                  name={modality.name}
+                  description={modality.description}
+                  type={modality.type}
+                  isSelected={selectedModality === modality.type}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
