@@ -23,6 +23,11 @@ interface Assessment {
   } | null;
 }
 
+interface SupabaseClient {
+  id: string;
+  client_name: string;
+}
+
 export function AssessmentsList() {
   const { data: assessments, isLoading } = useQuery({
     queryKey: ["assessments"],
@@ -57,10 +62,12 @@ export function AssessmentsList() {
         session_date: item.session_date,
         session_type: item.session_type,
         symptom_status: item.symptom_status,
-        client: item.client && !Array.isArray(item.client) ? {
-          id: item.client.id,
-          client_name: item.client.client_name
-        } : null
+        client: item.client && typeof item.client === 'object' && !Array.isArray(item.client)
+          ? {
+              id: (item.client as SupabaseClient).id,
+              client_name: (item.client as SupabaseClient).client_name
+            }
+          : null
       }));
 
       return transformedData;
