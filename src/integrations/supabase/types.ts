@@ -9,15 +9,98 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      assessments: {
+        Row: {
+          assessment_section: string | null
+          client_id: string | null
+          created_at: string | null
+          data_section: string | null
+          diagnosis_notes: string | null
+          id: string
+          location: string | null
+          mental_status: Json | null
+          plan_section: string | null
+          risk_assessment: string | null
+          safety_plan: string | null
+          session_date: string | null
+          session_type: string | null
+          symptom_status: string | null
+          therapist_id: string | null
+          treatment_progress: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          assessment_section?: string | null
+          client_id?: string | null
+          created_at?: string | null
+          data_section?: string | null
+          diagnosis_notes?: string | null
+          id?: string
+          location?: string | null
+          mental_status?: Json | null
+          plan_section?: string | null
+          risk_assessment?: string | null
+          safety_plan?: string | null
+          session_date?: string | null
+          session_type?: string | null
+          symptom_status?: string | null
+          therapist_id?: string | null
+          treatment_progress?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          assessment_section?: string | null
+          client_id?: string | null
+          created_at?: string | null
+          data_section?: string | null
+          diagnosis_notes?: string | null
+          id?: string
+          location?: string | null
+          mental_status?: Json | null
+          plan_section?: string | null
+          risk_assessment?: string | null
+          safety_plan?: string | null
+          session_date?: string | null
+          session_type?: string | null
+          symptom_status?: string | null
+          therapist_id?: string | null
+          treatment_progress?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessments_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intake_forms: {
         Row: {
           age_group: string
           client_id: string | null
+          client_name: string | null
           created_at: string | null
           current_functioning: string | null
+          date_of_birth: string | null
+          email: string | null
+          emergency_contact: string | null
+          emergency_phone: string | null
           family_background: string | null
           id: string
+          insurance_id: string | null
+          insurance_provider: string | null
           medical_history: string | null
+          phone: string | null
           presenting_problems: string | null
           status: string | null
           therapist_id: string | null
@@ -27,11 +110,19 @@ export type Database = {
         Insert: {
           age_group: string
           client_id?: string | null
+          client_name?: string | null
           created_at?: string | null
           current_functioning?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          emergency_contact?: string | null
+          emergency_phone?: string | null
           family_background?: string | null
           id?: string
+          insurance_id?: string | null
+          insurance_provider?: string | null
           medical_history?: string | null
+          phone?: string | null
           presenting_problems?: string | null
           status?: string | null
           therapist_id?: string | null
@@ -41,11 +132,19 @@ export type Database = {
         Update: {
           age_group?: string
           client_id?: string | null
+          client_name?: string | null
           created_at?: string | null
           current_functioning?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          emergency_contact?: string | null
+          emergency_phone?: string | null
           family_background?: string | null
           id?: string
+          insurance_id?: string | null
+          insurance_provider?: string | null
           medical_history?: string | null
+          phone?: string | null
           presenting_problems?: string | null
           status?: string | null
           therapist_id?: string | null
