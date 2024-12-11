@@ -23,20 +23,6 @@ interface Assessment {
   } | null;
 }
 
-// Define the type for the Supabase response
-interface ClientData {
-  id: string;
-  client_name: string;
-}
-
-interface AssessmentData {
-  id: string;
-  session_date: string;
-  session_type: string;
-  symptom_status: string;
-  client: ClientData | null;
-}
-
 export function AssessmentsList() {
   const { data: assessments, isLoading } = useQuery({
     queryKey: ["assessments"],
@@ -66,12 +52,15 @@ export function AssessmentsList() {
       if (error) throw error;
       
       // Transform the data to match our Assessment interface
-      const transformedData: Assessment[] = (data as AssessmentData[] || []).map(item => ({
+      const transformedData: Assessment[] = (data || []).map(item => ({
         id: item.id,
         session_date: item.session_date,
         session_type: item.session_type,
         symptom_status: item.symptom_status,
-        client: item.client
+        client: item.client && !Array.isArray(item.client) ? {
+          id: item.client.id,
+          client_name: item.client.client_name
+        } : null
       }));
 
       return transformedData;
