@@ -24,7 +24,7 @@ interface Assessment {
 }
 
 export function AssessmentsList() {
-  const { data: assessments, isLoading } = useQuery<Assessment[]>({
+  const { data: assessments, isLoading } = useQuery({
     queryKey: ["assessments"],
     queryFn: async () => {
       const { data: profile } = await supabase
@@ -34,19 +34,20 @@ export function AssessmentsList() {
 
       if (!profile?.id) return [];
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("assessments")
         .select(`
           id,
           session_date,
           session_type,
           symptom_status,
-          client:client_id(id, client_name)
+          client:profiles!assessments_client_id_fkey(id, client_name)
         `)
         .eq("therapist_id", profile.id)
         .order("session_date", { ascending: false });
 
-      return data || [];
+      if (error) throw error;
+      return (data || []) as Assessment[];
     },
   });
 
