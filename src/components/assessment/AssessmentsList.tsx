@@ -12,8 +12,19 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 
+interface Assessment {
+  id: string;
+  session_date: string;
+  session_type: string;
+  symptom_status: string;
+  client: {
+    id: string;
+    client_name: string;
+  } | null;
+}
+
 export function AssessmentsList() {
-  const { data: assessments, isLoading } = useQuery({
+  const { data: assessments, isLoading } = useQuery<Assessment[]>({
     queryKey: ["assessments"],
     queryFn: async () => {
       const { data: profile } = await supabase
@@ -26,7 +37,10 @@ export function AssessmentsList() {
       const { data } = await supabase
         .from("assessments")
         .select(`
-          *,
+          id,
+          session_date,
+          session_type,
+          symptom_status,
           client:client_id(id, client_name)
         `)
         .eq("therapist_id", profile.id)
