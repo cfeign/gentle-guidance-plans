@@ -11,7 +11,7 @@ export function useTreatmentSuggestions(section: string, ageGroup: string, modal
         .eq("section", section)
         .eq("age_group", ageGroup)
         .eq("modality", modality)
-        .single();
+        .maybeSingle(); // Using maybeSingle() instead of single()
 
       if (error) {
         console.error("Error fetching suggestions:", error);
