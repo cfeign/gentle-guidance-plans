@@ -2,10 +2,14 @@ import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import { TreatmentPlanWorkflow } from "@/components/TreatmentPlanWorkflow";
 import { TherapyModality } from "@/components/TherapyModality";
+import { AgeGroupSelector } from "@/components/AgeGroupSelector";
 
 const TreatmentPlanForm = () => {
   const location = useLocation();
-  const { ageGroup } = location.state as { ageGroup: string };
+  // Default to 'adults' if no age group is provided in location state
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState(
+    location.state?.ageGroup || "adults"
+  );
   const [selectedModality, setSelectedModality] = useState("");
   const [showWorkflow, setShowWorkflow] = useState(false);
 
@@ -50,6 +54,13 @@ const TreatmentPlanForm = () => {
             </p>
           </div>
 
+          <div className="mb-8">
+            <AgeGroupSelector 
+              selected={selectedAgeGroup} 
+              onChange={setSelectedAgeGroup}
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
             {modalities.map((modality) => (
               <div
@@ -68,7 +79,10 @@ const TreatmentPlanForm = () => {
           </div>
         </>
       ) : (
-        <TreatmentPlanWorkflow ageGroup={ageGroup} modality={selectedModality} />
+        <TreatmentPlanWorkflow 
+          ageGroup={selectedAgeGroup} 
+          modality={selectedModality} 
+        />
       )}
     </div>
   );
