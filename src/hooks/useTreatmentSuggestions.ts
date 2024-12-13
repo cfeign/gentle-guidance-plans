@@ -12,16 +12,15 @@ export function useTreatmentSuggestions(section: string, ageGroup: string, modal
         .select("suggestions")
         .eq("section", section)
         .eq("age_group", ageGroup)
-        .eq("modality", modality)
-        .single();
+        .eq("modality", modality);
 
       if (error) {
         console.error("Error fetching suggestions:", error);
         return [];
       }
 
-      console.log("Received suggestions:", data?.suggestions);
-      return data?.suggestions || [];
+      // Return the first row's suggestions if found, otherwise empty array
+      return data?.[0]?.suggestions || [];
     },
   });
 }
