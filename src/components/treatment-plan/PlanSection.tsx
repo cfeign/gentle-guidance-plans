@@ -34,8 +34,8 @@ export function PlanSection({
   return (
     <Card className="p-6">
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
         <NoteSection
+          title={title}
           section={section}
           value={value}
           onChange={onChange}
