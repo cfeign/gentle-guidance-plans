@@ -6,8 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createContext, useContext, useState } from "react";
 import Index from "./pages/Index";
 import TreatmentPlanForm from "./pages/TreatmentPlanForm";
-import IntakeForm from "./pages/IntakeForm";
-import IntakeAndAssessments from "./pages/IntakeAndAssessments";
 import { RoleSelector } from "./components/RoleSelector";
 
 const queryClient = new QueryClient();
@@ -40,8 +38,6 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/treatment-plan" element={<TreatmentPlanForm />} />
-                  <Route path="/intake" element={<IntakeForm />} />
-                  <Route path="/records" element={<IntakeAndAssessments />} />
                 </Routes>
               </div>
             </div>
