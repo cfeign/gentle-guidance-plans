@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -110,19 +110,6 @@ const TreatmentPlanForm = () => {
   const navigate = useNavigate();
   const { role } = useRole();
   const isClientView = role === "client";
-
-  // Redirect if no state is present
-  useEffect(() => {
-    if (!location.state) {
-      navigate("/");
-    }
-  }, [location.state, navigate]);
-
-  // Early return if no state to prevent rendering with null values
-  if (!location.state) {
-    return null;
-  }
-
   const { ageGroup, modality } = location.state as LocationState;
   const sampleNotes = isClientView 
     ? getClientFriendlyNotes(ageGroup, modality)
