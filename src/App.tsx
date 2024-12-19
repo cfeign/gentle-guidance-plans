@@ -28,12 +28,10 @@ const App = () => {
   const [role, setRole] = useState<UserRole>("therapist");
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <RoleContext.Provider value={{ role, setRole }}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <RoleContext.Provider value={{ role, setRole }}>
+          <TooltipProvider>
             <div className="min-h-screen bg-gradient-to-b from-white to-therapy-secondary/20">
               <div className="container mx-auto p-4">
                 <RoleSelector />
@@ -45,10 +43,12 @@ const App = () => {
                 </Routes>
               </div>
             </div>
-          </BrowserRouter>
-        </TooltipProvider>
-      </RoleContext.Provider>
-    </QueryClientProvider>
+            <Toaster />
+            <Sonner />
+          </TooltipProvider>
+        </RoleContext.Provider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 
