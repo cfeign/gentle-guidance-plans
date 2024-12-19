@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Heart } from "lucide-react";
+import { PlanSection } from "./treatment-plan/PlanSection";
 
 interface TreatmentPlanWorkflowProps {
   ageGroup: string;
@@ -10,6 +11,10 @@ interface TreatmentPlanWorkflowProps {
 
 export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkflowProps) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [assessmentContent, setAssessmentContent] = useState("");
+  const [structureContent, setStructureContent] = useState("");
+  const [interventionContent, setInterventionContent] = useState("");
+  const [isRefining, setIsRefining] = useState(false);
 
   const steps = [
     {
@@ -20,6 +25,9 @@ export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkf
         "Identify primary concerns",
         "Establish treatment goals",
       ],
+      content: assessmentContent,
+      setContent: setAssessmentContent,
+      sampleNote: "Based on the initial assessment, the client presents with...",
     },
     {
       title: "Treatment Structure",
@@ -29,6 +37,9 @@ export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkf
         "Set milestone markers",
         "Plan parent/guardian involvement",
       ],
+      content: structureContent,
+      setContent: setStructureContent,
+      sampleNote: "Treatment will be structured as follows...",
     },
     {
       title: "Intervention Strategies",
@@ -38,8 +49,13 @@ export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkf
         "Develop coping strategies",
         "Plan progress tracking methods",
       ],
+      content: interventionContent,
+      setContent: setInterventionContent,
+      sampleNote: "The following intervention strategies will be implemented...",
     },
   ];
+
+  const currentStepData = steps[currentStep - 1];
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -76,17 +92,31 @@ export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkf
       </div>
 
       <Card className="p-6">
-        <h3 className="text-xl font-semibold mb-4">{steps[currentStep - 1].title}</h3>
-        <p className="text-gray-600 mb-6">{steps[currentStep - 1].description}</p>
+        <h3 className="text-xl font-semibold mb-4">{currentStepData.title}</h3>
+        <p className="text-gray-600 mb-6">{currentStepData.description}</p>
         
-        <div className="space-y-4">
-          {steps[currentStep - 1].tasks.map((task, index) => (
+        <div className="space-y-4 mb-6">
+          {currentStepData.tasks.map((task, index) => (
             <div key={index} className="flex items-center space-x-3">
               <div className="w-2 h-2 rounded-full bg-therapy-secondary" />
               <span>{task}</span>
             </div>
           ))}
         </div>
+
+        <PlanSection
+          title={currentStepData.title}
+          section={`step_${currentStep}`}
+          value={currentStepData.content}
+          onChange={currentStepData.setContent}
+          sampleNote={currentStepData.sampleNote}
+          ageGroup={ageGroup}
+          modality={modality}
+          isRefining={isRefining}
+          onRefine={() => setIsRefining(true)}
+          versions={[]}
+          onRevert={(content: string) => currentStepData.setContent(content)}
+        />
 
         <div className="flex justify-between mt-8">
           <Button

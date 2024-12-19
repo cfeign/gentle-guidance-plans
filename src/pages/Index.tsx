@@ -1,68 +1,94 @@
 import { useNavigate } from "react-router-dom";
+import { useRole } from "../App";
 import { Card } from "@/components/ui/card";
-import { ClipboardList, FileText, Receipt } from "lucide-react";
+import { ClipboardList, FileSpreadsheet } from "lucide-react";
+import { AgeGroupSelector } from "@/components/AgeGroupSelector";
+import { useState } from "react";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { role } = useRole();
+  const isClientView = role === "client";
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState("adults");
 
-  const cards = [
+  const features = [
     {
-      title: "Treatment Plans",
-      description: "Create and manage personalized treatment plans for your clients",
+      title: isClientView ? "Your Treatment Journey" : "Treatment Plans",
       icon: ClipboardList,
-      path: "/treatment-plan",
-      isComingSoon: false,
+      description: isClientView
+        ? "Personalized plans to support your growth and healing"
+        : "Create and manage customized treatment plans",
+      onClick: () => navigate("/treatment-plan", { 
+        state: { 
+          ageGroup: selectedAgeGroup
+        }
+      }),
+      isAvailable: true,
     },
     {
-      title: "Intake & Assessment",
-      description: "Streamline your client onboarding process",
-      icon: FileText,
-      path: "/intake",
-      isComingSoon: true,
-    },
-    {
-      title: "Billing",
-      description: "Manage invoices and payments efficiently",
-      icon: Receipt,
-      path: "/billing",
-      isComingSoon: true,
+      title: isClientView ? "Your Wellness Snapshot" : "Intake & Assessments",
+      icon: FileSpreadsheet,
+      description: isClientView
+        ? "Share your story and help us understand your needs better"
+        : "Biopsychosocial intake forms and standardized assessments",
+      onClick: () => navigate("/intake", { state: { ageGroup: selectedAgeGroup } }),
+      isAvailable: true,
     },
   ];
 
   return (
-    <div className="container mx-auto py-12">
-      <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">
-        Welcome to Your Practice Dashboard
-      </h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cards.map((card) => (
-          <div
-            key={card.title}
-            className="relative"
-            onClick={() => !card.isComingSoon && navigate(card.path)}
-          >
-            <Card className={`p-6 h-full transition-all duration-300 ${
-              !card.isComingSoon ? "hover:shadow-lg cursor-pointer" : "opacity-75"
-            }`}>
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="p-3 rounded-full bg-therapy-secondary">
-                  <card.icon className="w-8 h-8 text-therapy-primary" />
+    <div className="min-h-screen bg-gradient-to-b from-white to-therapy-secondary/20">
+      <div className="container py-8">
+        <div className="mb-8">
+          <AgeGroupSelector selected={selectedAgeGroup} onChange={setSelectedAgeGroup} />
+        </div>
+
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            {isClientView
+              ? "Let's Begin Your Healing Journey"
+              : "Welcome to Your Practice Dashboard"}
+          </h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            {isClientView
+              ? "Choose where you'd like to start. We're here to support you every step of the way."
+              : "Select a tool to begin working with your clients."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {features.map((feature) => (
+            <Card
+              key={feature.title}
+              className={`p-8 cursor-pointer transition-all duration-300 hover:shadow-lg relative overflow-hidden group ${
+                feature.isAvailable ? "hover:scale-102" : "opacity-75"
+              }`}
+              onClick={feature.onClick}
+            >
+              <div className="flex flex-col h-full">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="p-3 rounded-full bg-therapy-secondary">
+                    <feature.icon className="w-8 h-8 text-therapy-primary" />
+                  </div>
+                  <h2 className="text-2xl font-semibold text-gray-800">
+                    {feature.title}
+                  </h2>
                 </div>
-                <h2 className="text-2xl font-semibold text-gray-800">{card.title}</h2>
-                <p className="text-gray-600">{card.description}</p>
+                <p className="text-gray-600 text-lg mb-4">{feature.description}</p>
+                {!feature.isAvailable && (
+                  <div className="absolute top-4 right-4 bg-therapy-soft text-gray-500 text-sm font-medium px-3 py-1 rounded-full">
+                    Coming Soon
+                  </div>
+                )}
+                <div className="mt-auto flex justify-end">
+                  <span className="text-therapy-primary group-hover:underline">
+                    {feature.isAvailable ? "Get Started →" : "Learn More →"}
+                  </span>
+                </div>
               </div>
             </Card>
-            
-            {card.isComingSoon && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/5 rounded-lg backdrop-blur-[1px]">
-                <span className="bg-therapy-primary text-white px-4 py-2 rounded-full text-sm font-medium">
-                  Coming Soon
-                </span>
-              </div>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
