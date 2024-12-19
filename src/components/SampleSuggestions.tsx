@@ -17,22 +17,9 @@ interface SampleSuggestionsProps {
 
 export function SampleSuggestions({ section, ageGroup, modality }: SampleSuggestionsProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: suggestions = [], isLoading, isError } = useTreatmentSuggestions(section, ageGroup, modality);
+  const { data: suggestions = [], isLoading } = useTreatmentSuggestions(section, ageGroup, modality);
 
-  console.log("Rendering suggestions:", { section, ageGroup, modality, suggestions });
-
-  if (isLoading) {
-    return (
-      <Button variant="ghost" size="sm" disabled className="text-therapy-primary">
-        <Lightbulb className="w-4 h-4 mr-2" />
-        Loading suggestions...
-      </Button>
-    );
-  }
-
-  if (isError || !suggestions || suggestions.length === 0) {
-    return null;
-  }
+  if (isLoading || !suggestions.length) return null;
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -47,7 +34,7 @@ export function SampleSuggestions({ section, ageGroup, modality }: SampleSuggest
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="mt-2 space-y-2">
-        {suggestions.map((suggestion: string, index: number) => (
+        {suggestions.map((suggestion, index) => (
           <SuggestionItem key={index} suggestion={suggestion} />
         ))}
       </CollapsibleContent>
