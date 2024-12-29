@@ -1,56 +1,40 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Lightbulb } from "lucide-react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { useTreatmentSuggestions } from "@/hooks/useTreatmentSuggestions";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { SuggestionItem } from "./SuggestionItem";
+import { useTreatmentSuggestions } from "@/hooks/useTreatmentSuggestions";
+import { FormSectionProps } from "@/types/forms";
 
-interface SampleSuggestionsProps {
-  section: string;
-  ageGroup: string;
-  modality: string;
-}
+export function SampleSuggestions({ section, ageGroup, modality }: FormSectionProps) {
 
-export function SampleSuggestions({ section, ageGroup, modality }: SampleSuggestionsProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const { data: suggestions = [], isLoading, isError } = useTreatmentSuggestions(section, ageGroup, modality);
-
-  console.log("Rendering suggestions:", { section, ageGroup, modality, suggestions });
-
-  if (isLoading) {
-    return (
-      <Button variant="ghost" size="sm" disabled className="text-therapy-primary">
-        <Lightbulb className="w-4 h-4 mr-2" />
-        Loading suggestions...
-      </Button>
-    );
-  }
-
-  if (isError || !suggestions || suggestions.length === 0) {
-    return null;
-  }
+  const { suggestions, isLoading } = useTreatmentSuggestions(section, ageGroup, modality);
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-therapy-primary hover:text-therapy-primary/80 hover:bg-therapy-secondary/50 p-2"
-        >
-          <Lightbulb className="w-4 h-4 mr-2" />
-          Help Explore More Ideas
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm">
+          View Examples
         </Button>
-      </CollapsibleTrigger>
-      <CollapsibleContent className="mt-2 space-y-2">
-        {suggestions.map((suggestion: string, index: number) => (
-          <SuggestionItem key={index} suggestion={suggestion} />
-        ))}
-      </CollapsibleContent>
-    </Collapsible>
+      </PopoverTrigger>
+      <PopoverContent className="w-80">
+        <ScrollArea className="h-72">
+          <div className="space-y-4 p-4">
+            <h4 className="font-medium leading-none">Sample Content</h4>
+            <p className="text-sm text-muted-foreground">
+              Click any suggestion to use it as a starting point
+            </p>
+            {isLoading ? (
+              <p className="text-sm text-muted-foreground">Loading suggestions...</p>
+            ) : (
+              <div className="space-y-2">
+                {suggestions.map((suggestion, index) => (
+                  <SuggestionItem key={index} content={suggestion} />
+                ))}
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+      </PopoverContent>
+    </Popover>
   );
 }

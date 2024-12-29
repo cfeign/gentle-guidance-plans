@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle, Heart } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlanSection } from "./treatment-plan/PlanSection";
 
 interface TreatmentPlanWorkflowProps {
@@ -10,7 +10,7 @@ interface TreatmentPlanWorkflowProps {
 }
 
 export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkflowProps) {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState("1");
   const [assessmentContent, setAssessmentContent] = useState("");
   const [structureContent, setStructureContent] = useState("");
   const [interventionContent, setInterventionContent] = useState("");
@@ -18,6 +18,7 @@ export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkf
 
   const steps = [
     {
+      id: "1",
       title: "Initial Assessment",
       description: "Gather baseline information and identify specific challenges",
       tasks: [
@@ -30,6 +31,7 @@ export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkf
       sampleNote: "Based on the initial assessment, the client presents with...",
     },
     {
+      id: "2",
       title: "Treatment Structure",
       description: "Define the framework and approach",
       tasks: [
@@ -42,6 +44,7 @@ export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkf
       sampleNote: "Treatment will be structured as follows...",
     },
     {
+      id: "3",
       title: "Intervention Strategies",
       description: "Select specific techniques and approaches",
       tasks: [
@@ -55,85 +58,79 @@ export function TreatmentPlanWorkflow({ ageGroup, modality }: TreatmentPlanWorkf
     },
   ];
 
-  const currentStepData = steps[currentStep - 1];
+  const handleNavigation = (direction: 'prev' | 'next') => {
+    const currentIndex = parseInt(currentStep);
+    if (direction === 'prev' && currentIndex > 1) {
+      setCurrentStep(String(currentIndex - 1));
+    } else if (direction === 'next' && currentIndex < steps.length) {
+      setCurrentStep(String(currentIndex + 1));
+    }
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-between items-center mb-8">
-        {steps.map((step, index) => (
-          <div
-            key={index}
-            className="flex items-center"
-          >
-            <div
-              className={`rounded-full w-8 h-8 flex items-center justify-center ${
-                currentStep > index + 1
-                  ? "bg-therapy-primary text-white"
-                  : currentStep === index + 1
-                  ? "bg-therapy-secondary text-therapy-primary"
-                  : "bg-gray-200"
-              }`}
+      <Tabs value={currentStep} onValueChange={setCurrentStep} className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          {steps.map((step) => (
+            <TabsTrigger 
+              key={step.id} 
+              value={step.id}
+              className="data-[state=active]:bg-therapy-secondary data-[state=active]:text-therapy-primary"
             >
-              {currentStep > index + 1 ? (
-                <CheckCircle className="w-5 h-5" />
-              ) : (
-                index + 1
-              )}
-            </div>
-            {index < steps.length - 1 && (
-              <div
-                className={`h-1 w-16 mx-2 ${
-                  currentStep > index + 1 ? "bg-therapy-primary" : "bg-gray-200"
-                }`}
-              />
-            )}
-          </div>
-        ))}
-      </div>
-
-      <Card className="p-6">
-        <h3 className="text-xl font-semibold mb-4">{currentStepData.title}</h3>
-        <p className="text-gray-600 mb-6">{currentStepData.description}</p>
-        
-        <div className="space-y-4 mb-6">
-          {currentStepData.tasks.map((task, index) => (
-            <div key={index} className="flex items-center space-x-3">
-              <div className="w-2 h-2 rounded-full bg-therapy-secondary" />
-              <span>{task}</span>
-            </div>
+              {step.title}
+            </TabsTrigger>
           ))}
-        </div>
+        </TabsList>
 
-        <PlanSection
-          title={currentStepData.title}
-          section={`step_${currentStep}`}
-          value={currentStepData.content}
-          onChange={currentStepData.setContent}
-          sampleNote={currentStepData.sampleNote}
-          ageGroup={ageGroup}
-          modality={modality}
-          isRefining={isRefining}
-          onRefine={() => setIsRefining(true)}
-          versions={[]}
-          onRevert={(content: string) => currentStepData.setContent(content)}
-        />
+        {steps.map((step) => (
+          <TabsContent key={step.id} value={step.id}>
+            <Card className="p-6">
+              <h3 className="text-xl font-semibold mb-4">{step.title}</h3>
+              <p className="text-gray-600 mb-6">{step.description}</p>
+              
+              <div className="space-y-4 mb-6">
+                {step.tasks.map((task, index) => (
+                  <div key={index} className="flex items-center space-x-3">
+                    <div className="w-2 h-2 rounded-full bg-therapy-secondary" />
+                    <span>{task}</span>
+                  </div>
+                ))}
+              </div>
 
-        <div className="flex justify-between mt-8">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 1))}
-            disabled={currentStep === 1}
-          >
-            Previous
-          </Button>
-          <Button
-            onClick={() => setCurrentStep((prev) => Math.min(prev + 1, steps.length))}
-            disabled={currentStep === steps.length}
-          >
-            Next Step
-          </Button>
-        </div>
-      </Card>
+              <PlanSection
+                title={step.title}
+                section={`step_${step.id}`}
+                value={step.content}
+                onChange={step.setContent}
+                sampleNote={step.sampleNote}
+                ageGroup={ageGroup}
+                modality={modality}
+                isRefining={isRefining}
+                onRefine={() => setIsRefining(true)}
+                versions={[]}
+                onRevert={(content: string) => step.setContent(content)}
+              />
+
+              <div className="flex justify-between mt-8">
+                <Button
+                  variant="outline"
+                  onClick={() => handleNavigation('prev')}
+                  disabled={currentStep === "1"}
+                >
+                  Previous
+                </Button>
+                <Button
+                  onClick={() => handleNavigation('next')}
+                  disabled={currentStep === String(steps.length)}
+                  className="bg-therapy-primary hover:bg-therapy-primary/90"
+                >
+                  Next Step
+                </Button>
+              </div>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
     </div>
   );
 }

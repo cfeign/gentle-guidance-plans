@@ -1,17 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { AgeGroup } from "@/types/forms";
 
 interface AgeGroupSelectorProps {
-  selected: string;
-  onChange: (group: string) => void;
+  selected: AgeGroup;
+  onChange: (group: AgeGroup) => void;
 }
 
+const ageGroups: Array<{ id: AgeGroup; label: string }> = [
+  { id: "children", label: "Kids & Young Children (3-12)" },
+  { id: "teens", label: "Teens & Youth (13-17)" },
+  { id: "adults", label: "Adults (18+)" },
+];
+
 export function AgeGroupSelector({ selected, onChange }: AgeGroupSelectorProps) {
-  const ageGroups = [
-    { id: "children", label: "Kids & Young Children (3-12)" },
-    { id: "teens", label: "Teens & Youth (13-17)" },
-    { id: "adults", label: "Adults (18+)" },
-  ];
 
   return (
     <div className="flex space-x-4 p-4 bg-therapy-secondary/20 rounded-lg">

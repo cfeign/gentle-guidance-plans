@@ -1,11 +1,21 @@
-interface SuggestionItemProps {
-  suggestion: string;
-}
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { SuggestionProps } from "@/types/forms";
 
-export function SuggestionItem({ suggestion }: SuggestionItemProps) {
+export function SuggestionItem({ content, onClick, className }: SuggestionProps) {
+
   return (
-    <p className="text-sm text-gray-600 pl-4 border-l-2 border-therapy-primary/30">
-      {suggestion}
-    </p>
+    <Button
+      variant="ghost"
+      className={cn(
+        "w-full justify-start text-left font-normal hover:bg-therapy-soft",
+        className
+      )}
+      onClick={onClick}
+    >
+      <p className="line-clamp-2 text-sm text-muted-foreground">
+        {content}
+      </p>
+    </Button>
   );
 }

@@ -1,0 +1,27 @@
+.ProseMirror {
+	min-height: 120px; /* Approximately 5 lines of text */
+	padding: 0.5rem;
+	border-radius: 0.375rem;
+}
+
+.ProseMirror:focus {
+	outline: none;
+}
+
+.ProseMirror p {
+	margin: 0.5em 0;
+	line-height: 1.5;
+}
+
+.ProseMirror ul {
+	padding-left: 1.5em;
+	margin: 0.5em 0;
+}
+
+.ProseMirror li {
+	margin: 0.2em 0;
+}
+
+.ProseMirror-focused {
+	border-color: hsl(var(--primary));
+}

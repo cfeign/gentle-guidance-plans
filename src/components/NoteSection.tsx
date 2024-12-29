@@ -1,12 +1,14 @@
 import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { NoteControls } from "@/components/NoteControls";
 import { VersionHistory } from "@/components/VersionHistory";
 import { SampleSuggestions } from "@/components/SampleSuggestions";
 import { useRole } from "../App";
-import { MessageSquare, Lock } from "lucide-react";
+import { MessageSquare, Lock, Bold, Italic, List } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { Toggle } from "./ui/toggle";
 
 interface Version {
   content: string;
@@ -19,6 +21,38 @@ interface Comment {
   content: string;
   timestamp: Date;
 }
+
+const MenuBar = ({ editor }: { editor: any }) => {
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <div className="flex gap-1 mb-2">
+      <Toggle
+        size="sm"
+        pressed={editor.isActive('bold')}
+        onPressedChange={() => editor.chain().focus().toggleBold().run()}
+      >
+        <Bold className="h-4 w-4" />
+      </Toggle>
+      <Toggle
+        size="sm"
+        pressed={editor.isActive('italic')}
+        onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+      >
+        <Italic className="h-4 w-4" />
+      </Toggle>
+      <Toggle
+        size="sm"
+        pressed={editor.isActive('bulletList')}
+        onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
+      >
+        <List className="h-4 w-4" />
+      </Toggle>
+    </div>
+  );
+};
 
 interface NoteSectionProps {
   title: string;
@@ -55,6 +89,42 @@ export function NoteSection({
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
 
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: value,
+    onUpdate: ({ editor }) => {
+      onChange(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm max-w-none min-h-[120px] focus:outline-none',
+      },
+    },
+  });
+
+  const therapistEditor = useEditor({
+    extensions: [StarterKit],
+    content: therapistNotes,
+    onUpdate: ({ editor }) => {
+      setTherapistNotes(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm max-w-none min-h-[120px] focus:outline-none',
+      },
+    },
+  });
+  const commentEditor = useEditor({
+    extensions: [StarterKit],
+    content: newComment,
+    onUpdate: ({ editor }) => setNewComment(editor.getHTML()),
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm max-w-none focus:outline-none',
+      },
+    },
+  });
+
   const handleAddComment = () => {
     if (newComment.trim()) {
       setComments([
@@ -65,7 +135,8 @@ export function NoteSection({
           timestamp: new Date(),
         },
       ]);
-      setNewComment("");
+        setNewComment("");
+        commentEditor?.commands.setContent("");
     }
   };
 
@@ -83,27 +154,24 @@ export function NoteSection({
           <SampleSuggestions section={section} ageGroup={ageGroup} modality={modality} />
         </div>
 
-        <Textarea
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={`Enter your ${section} notes here...`}
-          className="min-h-[150px]"
-        />
+        <div className="border rounded-md p-3">
+          <MenuBar editor={editor} />
+          <EditorContent editor={editor} className="min-h-[150px]" />
+        </div>
 
         {role === "therapist" && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Lock className="w-4 h-4" />
-              Therapist-only Notes
-            </div>
-            <Textarea
-              value={therapistNotes}
-              onChange={(e) => setTherapistNotes(e.target.value)}
-              placeholder="Private notes only visible to therapist..."
-              className="min-h-[100px] bg-gray-50"
-            />
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Lock className="w-4 h-4" />
+            Therapist-only Notes
+          </div>
+          <div className="border rounded-md p-3 bg-gray-50">
+            <MenuBar editor={therapistEditor} />
+            <EditorContent editor={therapistEditor} className="min-h-[100px]" />
+          </div>
           </div>
         )}
+
 
         <div className="space-y-2">
           {role === "therapist" && (
@@ -156,15 +224,22 @@ export function NoteSection({
                 </div>
               ))}
 
-              <div className="flex gap-2">
-                <Textarea
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Add to the discussion..."
-                  className="flex-1"
+                <div className="flex gap-2">
+                <EditorContent
+                  editor={useEditor({
+                  extensions: [StarterKit],
+                  content: newComment,
+                  onUpdate: ({ editor }) => setNewComment(editor.getHTML()),
+                  editorProps: {
+                    attributes: {
+                    class: 'prose prose-sm max-w-none focus:outline-none flex-1',
+                    },
+                  },
+                  })}
+                  className="flex-1 border rounded-md p-2"
                 />
                 <Button onClick={handleAddComment}>Send</Button>
-              </div>
+                </div>
             </div>
           )}
         </div>

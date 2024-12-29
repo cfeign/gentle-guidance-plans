@@ -3,15 +3,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { SampleSuggestions } from "./SampleSuggestions";
 import { InsuranceCompliance } from "./InsuranceCompliance";
 import { UseFormReturn } from "react-hook-form";
+import { FormFieldProps, Section } from "@/types/forms";
 
-interface FormFieldWithTipsProps {
+interface FormFieldWithTipsProps extends FormFieldProps {
   form: UseFormReturn<any>;
-  name: string;
-  label: string;
-  placeholder: string;
-  ageGroup?: string;
-  modality?: string;
-  className?: string;
 }
 
 export function FormFieldWithTips({
@@ -23,6 +18,9 @@ export function FormFieldWithTips({
   modality = "emdr",
   className,
 }: FormFieldWithTipsProps) {
+  // Only show suggestions and compliance tips for relevant sections
+  const showTips = ['presenting_problems', 'diagnostic_impressions', 'treatment_recommendations'].includes(name);
+
   return (
     <FormField
       control={form.control}
@@ -37,14 +35,16 @@ export function FormFieldWithTips({
               {...field}
             />
           </FormControl>
-          <div className="flex gap-2 flex-wrap">
-            <SampleSuggestions
-              section={name}
-              ageGroup={ageGroup}
-              modality={modality}
-            />
-            <InsuranceCompliance section={name} />
-          </div>
+          {showTips && (
+            <div className="flex gap-2 flex-wrap">
+              <SampleSuggestions
+                section={name as Section}
+                ageGroup={ageGroup}
+                modality={modality}
+              />
+              <InsuranceCompliance section={name as Section} />
+            </div>
+          )}
           <FormMessage />
         </FormItem>
       )}
